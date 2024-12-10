@@ -6,10 +6,19 @@ log:
 api:
   dashboard: true
   insecure: false
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
 http:
   routers:
     dashboard:
       rule: Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
       service: api@internal
       middlewares:
         - auth
@@ -18,11 +27,6 @@ http:
       basicAuth:
         users:
           - "admin:encrypted_password_here" # Passwords must be hashed using MD5, SHA1, or BCrypt.
-entryPoints:
-  web:
-    address: ":80"
-  websecure:
-    address: ":443"
 certificatesResolvers:
   cloudflare:
     acme:

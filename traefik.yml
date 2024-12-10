@@ -7,8 +7,14 @@ api:
   dashboard: true
   insecure: false
 http:
+  routers:
+    dashboard:
+      rule: Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      service: api@internal
+      middlewares:
+        - auth
   middlewares:
-    dashboard-auth:
+    auth:
       basicAuth:
         users:
           - "admin:encrypted_password_here" # Passwords must be hashed using MD5, SHA1, or BCrypt.

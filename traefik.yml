@@ -14,14 +14,12 @@ entryPoints:
 http:
   routers:
     dashboard:
-      rule: Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      rule: "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       entryPoints:
         - websecure
       tls:
         certResolver: cloudflare
-      service: api@internal
-      middlewares:
-        - auth
+      service: "api@internal"
   middlewares:
     auth:
       basicAuth:

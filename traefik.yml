@@ -1,0 +1,35 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+log:
+  level: DEBUG
+api:
+  dashboard: true
+  insecure: false
+http:
+  middlewares:
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:encrypted_password_here" # Passwords must be hashed using MD5, SHA1, or BCrypt.
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: "cloudflare_email_here"
+      storage: "/var/traefik/certs/acme.json"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      keyType: EC256
+      dnsChallenge:
+        provider: cloudflare
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false

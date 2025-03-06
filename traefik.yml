@@ -30,7 +30,7 @@ certificatesResolvers:
     acme:
       email: "cloudflare_email_here"
       storage: "/var/traefik/certs/acme.json"
-      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
       keyType: EC256
       dnsChallenge:
         provider: cloudflare

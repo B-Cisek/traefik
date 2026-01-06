@@ -2,19 +2,26 @@ global:
   checkNewVersion: false
   sendAnonymousUsage: false
 log:
-  level: DEBUG
+  level: INFO
 api:
   dashboard: true
   insecure: false
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: ":443"
 http:
   routers:
     dashboard:
-      rule: "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      middlewares:
+        - auth
+      rule: "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))" # Adjust this to match your domain
       entryPoints:
         - websecure
       tls:
@@ -24,11 +31,11 @@ http:
     auth:
       basicAuth:
         users:
-          - "admin:encrypted_password_here" # Passwords must be hashed using MD5, SHA1, or BCrypt.
+          - "admin:encrypted_password_here" # Password should be hashed using bcrypt
 certificatesResolvers:
   cloudflare:
     acme:
-      email: "cloudflare_email_here"
+      email: "cloudflare_email_here" # Cloudflare email
       storage: "/var/traefik/certs/acme.json"
       caServer: "https://acme-v02.api.letsencrypt.org/directory"
       keyType: EC256
